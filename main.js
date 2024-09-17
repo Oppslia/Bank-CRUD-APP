@@ -214,7 +214,7 @@ app.patch('/user/:id/edit', (req, res) => { // Update One User by ID
     if(Object.keys(req.body).length === 0){
         res.send({message: "No Changes"})
     }
-    else if("iwd" in req.body){
+    else if("id" in req.body){
         res.send({message: "ID is immutable"})
     }
     else{
@@ -228,7 +228,7 @@ app.patch('/account/:id/edit', (req, res) => { // Update One User by ID
     if(Object.keys(req.body).length === 0){
         res.send({message: "No Changes"})
     }
-    else if("iad" in req.body){
+    else if("id" in req.body){
         res.send({message: "ID is immutable"})
     }
     else{
