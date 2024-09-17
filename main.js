@@ -101,34 +101,55 @@ function insertData(req,res,type){
     
     }
 }
-function checkCurrentColumns(req,table){
+function checkCurrentColumns(req,table,callback){
     sql = `SHOW COLUMNS FROM \`${table}\`;`
     keys = Object.keys(req.body)
+    
     connection.query(sql, (err, results) => {
         if (err) {
-            console.error('Error retrieving columns:', err.message);
-            return;
+            console.error('Error retrieving columns:', err.message)
+            callback(false)
+            return
         }
         columns = results.map(row => row.Field)
-        for(key in keys){
-            if (!(keys[key] in columns))
-                return false
+        for(key of keys){
+            if (!columns.includes(key)){
+                console.log('Columns:', columns, ' in database')
+                console.log('Key not found:', key)
+                callback(false) // Key not found return false via callback
+                return
+            }
         }
-        if(colCount){
-            return columns
-        }
+        console.log("All keys exist in the columns.")
+        callback(columns)
     })
-
-
 }
 function updateSQL(req,table){
-    columns = (checkCurrentColumns(req, table))
-    if(columns){
-    sql = `UPDATE \`${table}\`
-    SET`
+    checkCurrentColumns(req, table, (result)=>{
+        if (result) { // result is the columns that currently exist in the database
+            console.log(`All keys exist in the ${table} table.`)
+            sql = `UPDATE \`${table}\` SET `
+            setParts = []
+            for(column of Object.keys(req.body)){
+                setParts.push(`\`${column}\` = ?`)
+            }
+            sql += setParts.join(", ")
+            console.log(req.params.id)
+            sql += ` WHERE \`id\`= '${req.params.id}';`
+            console.log(sql)
+            }
+        
 
-    }
 
+
+
+         else {
+            console.log(`Some keys are missing from the ${table} table.`)
+            // Handle the error case
+        }
+    
+    })
+    
 
 }
 app.get('/user', (req, res) => {        // Get All Users
