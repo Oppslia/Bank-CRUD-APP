@@ -28,6 +28,7 @@
     - ### DELETE http://localhost:3000/user{ID}  {Deletes a user by ID from the database} Pass an user ID as a URL parameter
     - ### DELETE http://localhost:3000/account/{ID}  {Deletes an account by ID from the database} Pass an account ID as a URL parameter
 ## WIP:
-  - ### PATCH http://localhost:3000/user/{ID}/edit
+  - ### PATCH http://localhost:3000/user/{ID}/edit {Updates an existing user by ID with passed body parameters}
+  - ### PATCH http://localhost:3000/account/{ID}/edit {Updates an existing account by ID with passed body parameters}
       
     
