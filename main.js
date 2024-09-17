@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS \`testdb\`.\`Users\`(
 const table2Init =` 
 CREATE TABLE IF NOT EXISTS \`testdb\`.\`Accounts\`(
 \`id\` CHAR(36) NOT NULL PRIMARY KEY,
-\`balance\` INT,
+\`balance\` INT NOT NULL,
 \`type\` VARCHAR(255)
 );
   `
@@ -214,12 +214,12 @@ app.patch('/user/:id/edit', (req, res) => { // Update One User by ID
     if(Object.keys(req.body).length === 0){
         res.send({message: "No Changes"})
     }
-    else if("id" in req.body){
+    else if("iwd" in req.body){
         res.send({message: "ID is immutable"})
     }
     else{
         updateSQL(req, "Users")
-        res.send("message")
+        res.send(req.body)
     }
     
     //updateData( )//remember to prevent ID updates on serverside
@@ -228,12 +228,12 @@ app.patch('/account/:id/edit', (req, res) => { // Update One User by ID
     if(Object.keys(req.body).length === 0){
         res.send({message: "No Changes"})
     }
-    else if("id" in req.body){
+    else if("iad" in req.body){
         res.send({message: "ID is immutable"})
     }
     else{
         updateSQL(req, "Accounts")
-        res.send("message")
+        res.send(req.body)
     }
     
     //updateData( )//remember to prevent ID updates on serverside
