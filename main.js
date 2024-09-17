@@ -137,20 +137,20 @@ function updateSQL(req,table){
             console.log(req.params.id)
             sql += ` WHERE \`id\`= '${req.params.id}';`
             console.log(sql)
+            connection.query(sql, Object.values(req.body),(err, results) => {
+                if (err) {
+                    console.error('Error executing query:', err.message);
+                    return;
+                }
+                console.log('Update successful:', results);
+            })
             }
-        
-
-
-
-
          else {
             console.log(`Some keys are missing from the ${table} table.`)
             // Handle the error case
         }
     
     })
-    
-
 }
 app.get('/user', (req, res) => {        // Get All Users
     selectSQL('*','Users', (results) => {
@@ -224,7 +224,20 @@ app.patch('/user/:id/edit', (req, res) => { // Update One User by ID
     
     //updateData( )//remember to prevent ID updates on serverside
 })
-
+app.patch('/account/:id/edit', (req, res) => { // Update One User by ID
+    if(Object.keys(req.body).length === 0){
+        res.send({message: "No Changes"})
+    }
+    else if("id" in req.body){
+        res.send({message: "ID is immutable"})
+    }
+    else{
+        updateSQL(req, "Accounts")
+        res.send("message")
+    }
+    
+    //updateData( )//remember to prevent ID updates on serverside
+})
 app.listen(port, () => {
 console.log(`Example app listening on port ${port}`)
 })
