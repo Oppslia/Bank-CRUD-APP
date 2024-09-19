@@ -51,7 +51,7 @@ createDB([table1Init,table2Init])
 app.use(express.json())
 //----------------------
 function deleteSQL(table, req, callback){
-    sql = `DELETE FROM \`${table}\`WHERE \`id\` = "${req.params.id}"`
+    let sql = `DELETE FROM \`${table}\`WHERE \`id\` = "${req.params.id}"`
     connection.query(sql, (err, results, fields) => {
         if (err) {
             console.error('Error executing query:', err.message);
@@ -60,8 +60,8 @@ function deleteSQL(table, req, callback){
             callback(results)
         })
 }
-function selectSQL(fields,table,req=false,callback){
-    sql = `SELECT ${fields} FROM \`${table}\``
+function selectSQL(fields,table,req,callback){
+    let sql = `SELECT ${fields} FROM \`${table}\` `
     if (req){ // Request is only sent in when getting data by value
         sql += `WHERE \`id\` = "${req.params.id}";`
     }
@@ -77,11 +77,12 @@ function selectSQL(fields,table,req=false,callback){
 }
 function insertData(req,res,type){
     if (typeof req.body == "object"){
+        let tableName;
         if (type == "Accounts"){
-            var tableName = type
+            tableName = type
         }
         if (type == "Users"){
-            var tableName = type
+            tableName = type
         }
         const data = req.body
         const keys = Object.keys(data)
@@ -102,8 +103,8 @@ function insertData(req,res,type){
     }
 }
 function checkCurrentColumns(req,table,callback){
-    sql = `SHOW COLUMNS FROM \`${table}\`;`
-    keys = Object.keys(req.body)
+    let sql = `SHOW COLUMNS FROM \`${table}\`;`
+    const keys = Object.keys(req.body)
     
     connection.query(sql, (err, results) => {
         if (err) {
@@ -111,7 +112,7 @@ function checkCurrentColumns(req,table,callback){
             callback(false)
             return
         }
-        columns = results.map(row => row.Field)
+        const columns = results.map(row => row.Field)
         for(key of keys){
             if (!columns.includes(key)){
                 console.log('Columns:', columns, ' in database')
@@ -153,13 +154,13 @@ function updateSQL(req,table){
     })
 }
 app.get('/user', (req, res) => {        // Get All Users
-    selectSQL('*','Users', (results) => {
+    selectSQL('*','Users', null, (results) => {
         res.status(201).send(results)
     })
 })
 app.get('/account', (req, res) => {     // Get All Accounts
-    selectSQL('*','Accounts', (results) => {
-        res.status(201).send(results);
+    selectSQL('*','Accounts', null, (results) => { // req is passed as null. originally nothing would be passed but lambda has? to be last argument. 
+        res.status(201).send(results)
     })
 })
 app.post('/user', (req, res) => {       // Add One User
