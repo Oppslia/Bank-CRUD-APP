@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS \`testdb\`.\`Accounts\`(
 \`type\` VARCHAR(255)
 );
   `
-createDB([table1Init,table2Init])
+createDB([table1Init, table2Init])
 app.use(express.json())
 //----------------------
 function deleteSQL(table, req, callback){
@@ -60,7 +60,7 @@ function deleteSQL(table, req, callback){
             callback(results)
         })
 }
-function selectSQL(fields,table,req,callback){
+function selectSQL(fields, table, req, callback){
     let sql = `SELECT ${fields} FROM \`${table}\` `
     if (req){ // Request is only sent in when getting data by value
         sql += `WHERE \`id\` = "${req.params.id}";`
@@ -102,7 +102,7 @@ function insertData(req,res,type){
     
     }
 }
-function checkCurrentColumns(req,table,callback){
+function checkCurrentColumns(req, table, callback){
     let sql = `SHOW COLUMNS FROM \`${table}\`;`
     const keys = Object.keys(req.body)
     
@@ -125,7 +125,7 @@ function checkCurrentColumns(req,table,callback){
         callback(columns)
     })
 }
-function updateSQL(req,table){
+function updateSQL(req, table){
     checkCurrentColumns(req, table, (result)=>{
         if (result) { // result is the columns that currently exist in the database
             console.log(`All keys exist in the ${table} table.`)
